@@ -1,0 +1,32 @@
+name: 'Maximus VAPT Scanner'
+description: 'Triggers a vulnerability scan against your source code using Maximus VAPT'
+author: 'MaximusAtlas'
+inputs:
+  vapt-server-url:
+    description: 'The base URL of the VAPT server'
+    required: true
+    default: 'https://vapt.maximusatlas.com'
+  api-key:
+    description: 'API key for authenticating with the VAPT server'
+    required: true
+  target:
+    description: 'Target to scan (e.g., github repository URL)'
+    required: true
+  repo-name:
+    description: 'Name of the repository for reporting'
+    required: false
+    default: '${{ github.repository }}'
+  branch:
+    description: 'Branch name for reporting'
+    required: false
+    default: '${{ github.ref_name }}'
+  build-id:
+    description: 'Build or Run ID for reporting'
+    required: false
+    default: '${{ github.run_id }}'
+  github-token:
+    description: 'GitHub token for private repository access'
+    required: false
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
