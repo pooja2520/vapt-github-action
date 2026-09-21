@@ -28,7 +28,7 @@ inputs:
     description: 'GitHub token for private repository access'
     required: false
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 branding:
   icon: 'shield'
