@@ -88,7 +88,31 @@ async function run(): Promise<void> {
                 responseType: 'arraybuffer',
                 timeout: 30000
             });
-            fs.writeFileSync(htmlPath, htmlRes.data);
+            let htmlContent = htmlRes.data.toString('utf-8');
+            const jsSnippet = `
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var tabs = document.querySelectorAll('.nav-link');
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    this.classList.add('active');
+                    var panes = document.querySelectorAll('.tab-pane');
+                    panes.forEach(function(p) { p.classList.remove('show', 'active'); });
+                    var targetId = this.getAttribute('href').substring(1);
+                    var targetPane = document.getElementById(targetId);
+                    if (targetPane) {
+                        targetPane.classList.add('show', 'active');
+                    }
+                });
+            });
+        });
+    </script>
+    </body>
+    `;
+            htmlContent = htmlContent.replace("</body>", jsSnippet);
+            fs.writeFileSync(htmlPath, Buffer.from(htmlContent, 'utf-8'));
             core.info(`[+] HTML report saved to ${htmlPath}`);
 
             core.info("[*] Downloading Excel report...");
